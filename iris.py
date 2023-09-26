@@ -6,7 +6,7 @@ import numpy as np
 iris_dataset = load_iris()
 knn = KNeighborsClassifier(n_neighbors=1)
 
-#print("Ключи iris_dataset: \n{}".format(iris_dataset.keys()))
+print("Ключи iris_dataset: \n{}".format(iris_dataset.keys()))
 #print(iris_dataset['DESCR'][:193] + "\n...")
 #print("Названия ответов: {}".format(iris_dataset['target_names']))
 print("Названия признаков: \n{}".format(iris_dataset['feature_names']))
@@ -19,7 +19,7 @@ print("Названия признаков: \n{}".format(iris_dataset['feature_n
 #print("Первые 10 строк массива data:\n{}".format(iris_dataset['target']))
 
 # разбивает на 2 части \ перемешивает датасет
-#train_test_split
+
 
 X_train, X_test, y_train, y_test = train_test_split(iris_dataset['data'], iris_dataset['target'], random_state=0)
 
