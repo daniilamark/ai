@@ -27,7 +27,7 @@ y = df1['ENERGY STAR Score']
 
 df1 = df1.reset_index()
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=50)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1, random_state=10)
 print(X_train.shape, X_test.shape)
 
 knn.fit(X_train, y_train)
