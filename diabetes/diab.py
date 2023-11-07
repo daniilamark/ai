@@ -20,6 +20,8 @@ print("lr.intercept_: {}".format(lr.intercept_))
 print("Правильность на обучающем наборе: {:.2f}".format(lr.score(X_train, y_train)))
 print("Правильность на тестовом наборе: {:.2f}".format(lr.score(X_test, y_test)))
 print("-------------------------------------------------")
+
+
 #Построение Ridge
 ridge = Ridge().fit(X_train, y_train)
 print("Правильность на обучающем наборе: {:.2f}".format(ridge.score(X_train, y_train)))

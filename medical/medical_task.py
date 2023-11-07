@@ -1,32 +1,66 @@
-# Импортируем Pandas
 import numpy as np
 import pandas as pd
+from sklearn import metrics
+import seaborn as sns
+import matplotlib.pyplot as plt
+from sklearn import preprocessing, svm
 from sklearn.model_selection import train_test_split
-from sklearn.neighbors import KNeighborsClassifier
-# Считываем содержимое файла в переменную data:
-from sklearn.neighbors import KNeighborsClassifier
+from sklearn.linear_model import LinearRegression, Ridge, Lasso, ElasticNet
 
-data = pd.read_csv("insurance.csv")
+dataset = pd.read_csv("insurance.csv")
+gender_list = {'male': 1, 'female': 2}
+smoker_list = {'yes': 1, 'no': 2}
+region_list = {'southeast': 1, 'northwest': 2, 'southwest': 3, 'northeast': 4}
 
+
+dataset.sex = [gender_list[item] for item in dataset.sex]
+dataset.smoker = [smoker_list[item] for item in dataset.smoker]
+dataset.region = [region_list[item] for item in dataset.region]
+
+print(dataset.shape)
 # Проверяем, что данные прочитаны:
-print(data.head())
+print(dataset.head())
+print(dataset.describe())
 
-knn = KNeighborsClassifier(n_neighbors=1)
+X = dataset[['age', 'sex', 'bmi', 'children', 'smoker', 'region']]
+#X = dataset[['age', 'bmi', 'children']]
+y = dataset['charges']
 
-# разбивает на 2 части \ перемешиваем датасет
-X = data.drop('charges', axis=1)
-y = data['charges']
+#
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1, random_state=20)
+#Построение модели OLS
 
-print(X_train.shape, X_test.shape)
+lr = LinearRegression().fit(X_train, y_train)
 
-knn.fit(X_train, y_train)
+print("lr.coef_: {}".format(lr.coef_))
+print("lr.intercept_: {}".format(lr.intercept_))
+
+print("Правильность на обучающем наборе: {:.2f}".format(lr.score(X_train, y_train)))
+print("Правильность на тестовом наборе: {:.2f}".format(lr.score(X_test, y_test)))
+print("-------------------------------------------------")
 
 
-# logreg001 = LogisticRegression().fit(X_train, y_train)
-# print("Правильность на обучающем наборе: {:.3f}".format(logreg001.score(X_train, y_train)))
-# print("Правильность на тестовом наборе: {:.3f}".format(logreg001.score(X_test, y_test)))
-# logreg100 = LogisticRegression(C=100).fit(X_train, y_train)
-# print("Правильность на обучающем наборе: {:.3f}".format(logreg100.score(X_train, y_train)))
-# print("Правильность на тестовом наборе: {:.3f}".format(logreg100.score(X_test, y_test)))
+coeff_df = pd.DataFrame(lr.coef_, X.columns, columns=['Coefficient'])
+print(coeff_df)
+
+
+y_pred = lr.predict(X_test)
+
+
+df = pd.DataFrame({'Actual': y_test, 'Predicted': y_pred})
+print("----------------------------")
+print(df)
+
+print("----------------------------")
+print('Mean Absolute Error:', metrics.mean_absolute_error(y_test, y_pred))
+print('Mean Squared Error:', metrics.mean_squared_error(y_test, y_pred))
+print('Root Mean Squared Error:', np.sqrt(metrics.mean_squared_error(y_test, y_pred)))
+
+#Построение Ridge
+print("------------Ri----------------")
+ridge = Ridge(alpha=0.1).fit(X_train, y_train)
+print("Правильность на обучающем наборе: {:.2f}".format(ridge.score(X_train, y_train)))
+print("Правильность на тестовом наборе: {:.2f}".format(ridge.score(X_test, y_test)))
+
+
